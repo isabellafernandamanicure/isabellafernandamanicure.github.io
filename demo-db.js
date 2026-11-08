@@ -2,12 +2,12 @@
    Na primeira abertura entra com os serviços de exemplo e alguns horários de exemplo.
    Na versão oficial, este arquivo sai e entra o Firebase (login + banco na nuvem), igual ao da Essence Glam. */
 (function(){
-  const KEY = "isabellafernanda.demo.v2";
+  const KEY = "isabellafernanda.agenda.v1";
   const pad = n => String(n).padStart(2, "0");
   const ymd = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
   const dia = n => { const d = new Date(); d.setDate(d.getDate()+n); return ymd(d); };
 
-  /* serviços de exemplo pra apresentação (preço e tempo entram na versão completa, com os dados dela) */
+  /* serviços que já vêm cadastrados; preço e tempo ela coloca em Ajustes */
   const sv = (id, nome, retornoDias) => ({id, nome, profId: "isa", preco: null, duracao: null, retornoDias, cuidados: ""});
   function seed(){
     const cfg = {
@@ -20,7 +20,9 @@
         sv("s-gel", "Esmaltação em gel", 21)
       ],
       reservaPct: 0,
-      semProxima: "",
+      semProxima: "^$nenhum",
+      proxDe: 7,
+      proxAte: 15,
       domicilioServicos: "^$sem-domiciliar",
       taxas: {"Cartão de débito": {pct: 0, proxDiaUtil: true}, "Cartão de crédito": {pct: 0, proxDiaUtil: true}, "Link de pagamento (crédito)": {pct: 0, proxDiaUtil: true}}
     };
@@ -28,14 +30,7 @@
     const ag = (cid, sid, nome, data, hora, status) => ({clienteId: cid, profId: "isa", divisao: [], servicos: [{id: sid, nome, preco: null, duracao: null}], servicoId: sid, servicoNome: nome, domicilio: null, data, hora, valor: null, duracao: null, obs: "", status, criadoEm: new Date().toISOString()});
     return {
       config: {geral: cfg},
-      clientes: {c1: cli("c1", "Ana Paula"), c2: cli("c2", "Bruna Lima"), c3: cli("c3", "Camila Rocha"), c4: cli("c4", "Duda Martins")},
-      agendamentos: {
-        a1: ag("c1", "s-pemao", "Pé e mão", dia(0), "09:00", "confirmado"),
-        a2: ag("c2", "s-gel", "Esmaltação em gel", dia(0), "14:00", "agendado"),
-        a3: ag("c3", "s-mao", "Manicure", dia(1), "10:00", "agendado"),
-        a4: ag("c4", "s-pe", "Pedicure", dia(3), "15:30", "agendado"),
-        a5: ag("c1", "s-mao", "Manicure", dia(5), "11:00", "agendado")
-      },
+      clientes: {}, agendamentos: {},
       caixa: {}, acompanhamentos: {}, reservas: {}, pedidos: {}
     };
   }
