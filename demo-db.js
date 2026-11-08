@@ -8,7 +8,10 @@
   const dia = n => { const d = new Date(); d.setDate(d.getDate()+n); return ymd(d); };
 
   /* serviços que já vêm cadastrados; preço e tempo ela coloca em Ajustes */
-  const sv = (id, nome, retornoDias) => ({id, nome, profId: "isa", preco: null, duracao: null, retornoDias, cuidados: ""});
+  /* cuidados gerais de unha (texto de exemplo; ela muda em Ajustes) */
+  const CUID = "• Nas primeiras horas, evite água quente e produto de limpeza.\n• Use luva pra lavar louça e fazer faxina.\n• Passe óleo de cutícula todo dia.\n• Não use a unha como ferramenta.";
+  const CUID_GEL = CUID + "\n• Não puxe nem descasque o gel. Quando for tirar, me chama que eu removo sem estragar sua unha.";
+  const sv = (id, nome, retornoDias, cuidados) => ({id, nome, profId: "isa", preco: null, duracao: null, retornoDias, cuidados: cuidados || CUID});
   function seed(){
     const cfg = {
       estudio: "Isabella Fernanda · Manicure e Pedicure",
@@ -17,7 +20,7 @@
         sv("s-mao", "Manicure", 15),
         sv("s-pe", "Pedicure", 15),
         sv("s-pemao", "Pé e mão", 15),
-        sv("s-gel", "Esmaltação em gel", 21)
+        sv("s-gel", "Esmaltação em gel", 21, CUID_GEL)
       ],
       reservaPct: 0,
       semProxima: "^$nenhum",

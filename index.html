@@ -279,12 +279,12 @@ const DEFAULT_CFG = {
   profissionais: [],
   servicos: [],
   msgs: {
-    confirmacao: "Oii {nome}, posso confirmar seu horário para {servico} {quando} às {hora}? 💗",
-    lembrete: "Oi, {nome}! Passando pra lembrar do seu horário amanhã, {data}, às {hora}, para {servico}. Te espero!",
-    cuidados: "Oi, {nome}! Obrigada pela visita. Seguem os cuidados com seu {servico}:\n{cuidados}\nQualquer dúvida, é só me chamar.",
-    retorno: "Oi, {nome}! Já está chegando a hora da manutenção do seu {servico}.\n{precos}\nQuer que eu reserve um horário pra você?",
-    proxima: "Oi, {nome}! Amei cuidar de você hoje 💛\nPra manter seu {servico} sempre lindo, {janela}\n{precos}\nQual dia e horário ficam melhor pra você? Já deixo reservado!",
-    proxima2: "Oi, {nome}! Passando pra ver se já dá pra reservar seu próximo horário de {servico}.\n{Janela}\n{precos}\nQual dia e horário ficam bons pra você?"
+    confirmacao: "Oii, {nome}! Tudo bem? Posso confirmar seu horário de {servico} {quando}, às {hora}? 💅",
+    lembrete: "Oi, {nome}! Passando pra lembrar do seu horário de {servico} amanhã, {data}, às {hora}. Te espero! 💅",
+    cuidados: "Oi, {nome}! Obrigada pela visita. 💕 Pra suas unhas durarem mais:\n{cuidados}\nQualquer dúvida, é só me chamar.",
+    retorno: "Oi, {nome}! Já tá na hora de renovar suas unhas. 💅\n{precos}\nQuer que eu reserve um horário pra você?",
+    proxima: "Oi, {nome}! Amei cuidar de você hoje. 💕\nPra suas unhas continuarem lindas, {janela}\nQual dia e horário ficam melhor pra você? Já deixo reservado!",
+    proxima2: "Oi, {nome}! Passando pra ver se já dá pra marcar suas unhas de novo. 💅\n{Janela}\nQual dia e horário ficam bons pra você?"
   }
 };
 const S = {
@@ -377,7 +377,7 @@ const nomesProfs = a => profsDoAg(a).map(id => profById(id)?.nome).filter(Boolea
 /* troca as {chaves}; linha que fica vazia (ex.: {precos} de serviço sem manutenção) some */
 function fill(tpl, ctx){ return String(tpl||"").replace(/\{(\w+)\}/g, (m,k) => ctx[k] != null ? ctx[k] : m).replace(/\n[ \t]*(?=\n)/g, "").replace(/\n{2,}/g, "\n").trim(); }
 /* nome do serviço como a cliente fala: sem "· colocação", "· manutenção até 20 dias" nem "Combo" */
-const nomeMsg = n => String(n||"").replace(/\s*·\s*(coloca[cç][aã]o|manuten[cç][aã]o.*)$/i,"").replace(/^combo\s+/i,"").trim();
+const nomeMsg = n => String(n||"").toLowerCase().replace(/\s*·\s*(coloca[cç][aã]o|manuten[cç][aã]o.*)$/i,"").replace(/^combo\s+/i,"").trim();
 const quandoDia = d => d === today() ? "hoje" : d === addDays(today(),1) ? "amanhã" : "dia "+fmtCurto(d);
 /* valores da manutenção dos cílios, lidos dos serviços cadastrados ("Fox Eyes · manutenção até 20 dias" etc.).
    Cada tipo tem o seu (Megafox é diferente), então procura a família do serviço da cliente: Fio U, Fox Eyes, Megafox, Volume 5D… */
@@ -544,7 +544,7 @@ function viewAgenda(v){
   html += profChips();
   html += calendarioMes(doProf);
   html += '<div class="dayhead"><h2>'+esc(fmtDia(S.dia))+'</h2>'+(S.dia!==today()?'<button class="btn-sm" data-dia="'+today()+'">Hoje</button>':'')+'</div>';
-  html += '<div class="row" style="margin-bottom:12px"><button class="btn-primary grow" data-new style="justify-content:center">+ Novo agendamento</button><button data-bloq>🔒 Fechar horário</button></div>';
+  html += '<div class="row" style="margin-bottom:12px"><button class="btn-primary grow" data-new style="justify-content:center">+ Novo agendamento</button><button data-bloq>Fechar horário</button></div>';
   if (!cfg().profissionais.length || !cfg().servicos.length){
     html += '<div class="banner">Antes do primeiro agendamento, cadastre as profissionais e os serviços (com preço) em <b>Ajustes</b>.</div>';
   }
@@ -1020,7 +1020,7 @@ function viewAjustes(v){
   let html = '<h2 class="sec">Estúdio</h2><div class="card form"><label class="f">Nome do estúdio<input id="aNome" value="'+esc(c.estudio)+'"></label><button class="btn-primary" id="aSalvaNome" style="justify-self:start">Salvar nome</button></div>';
   html += '<h2 class="sec">Profissionais</h2><div class="card">'+(c.profissionais.length? c.profissionais.map(p=>'<div class="line"><span class="sw" style="background:'+esc(p.cor)+'"></span><div class="grow">'+esc(p.nome)+'<small>'+esc(p.area||"")+'</small></div><button class="btn-sm" data-pe="'+esc(p.id)+'">Editar</button></div>').join("") : '<p class="note">Cadastre quem atende no estúdio.</p>')+'<button style="margin-top:10px" id="aNovaP">+ Profissional</button></div>';
   html += '<h2 class="sec">Serviços e preços</h2><div class="card">'+(c.servicos.length? c.servicos.map(s=>'<div class="svc"><div style="min-width:0"><b>'+esc(s.nome)+'</b><div class="tag">'+(s.divisao?.length ? 'Combo · '+s.divisao.map(d=>esc(profById(d.profId)?.nome||"")+' '+brl(d.valor)).join(" + ") : esc(profById(s.profId)?.nome||"Qualquer profissional"))+(s.duracao?" · "+esc(s.duracao)+" min":"")+(s.retornoDias?" · manutenção em "+esc(s.retornoDias)+" dias":"")+'</div></div><div style="text-align:right"><span class="money">'+(s.preco!=null? brl(s.preco) : '<span style="color:var(--warn)">sem preço</span>')+'</span><br><button class="btn-sm btn-ghost" data-se="'+esc(s.id)+'">Editar</button></div></div>').join("") : '<p class="note">Cadastre os serviços com preço, duração e prazo de manutenção.</p>')+'<button style="margin-top:10px" id="aNovoS">+ Serviço</button></div>';
-  html += '<h2 class="sec">Mensagens do WhatsApp</h2><div class="card form"><p class="note">Use <span class="ph">{nome}</span> <span class="ph">{servico}</span> <span class="ph">{data}</span> <span class="ph">{hora}</span> <span class="ph">{prof}</span> <span class="ph">{estudio}</span> <span class="ph">{cuidados}</span>. <span class="ph">{quando}</span> (hoje, amanhã ou o dia). Na “próxima”, também <span class="ph">{de}</span> e <span class="ph">{ate}</span> (as datas da janela) e <span class="ph">{janela}</span> (a frase da janela; nos cílios vira “já deixa sua manutenção garantida:”). <span class="ph">{precos}</span> põe as datas e os valores da manutenção dos cílios daquele tipo (até o dia X paga o valor de 20 dias; do dia Y ao dia Z, o de 30), contados do dia do atendimento. Em serviço sem manutenção, a linha some. O app troca pelos dados da cliente.</p>'+
+  html += '<h2 class="sec">Mensagens do WhatsApp</h2><div class="card form"><p class="note">Use <span class="ph">{nome}</span> <span class="ph">{servico}</span> <span class="ph">{data}</span> <span class="ph">{hora}</span> <span class="ph">{prof}</span> <span class="ph">{estudio}</span> <span class="ph">{cuidados}</span>. <span class="ph">{quando}</span> (hoje, amanhã ou o dia). Na “próxima”, também <span class="ph">{de}</span> e <span class="ph">{ate}</span> (as datas da janela) e <span class="ph">{janela}</span> (a frase da janela; “o ideal é voltar entre 15/11 e 23/11.”). O app troca pelos dados da cliente.</p>'+
     MSGS.map(([k,l])=>'<label class="f">'+l+'<textarea id="msg_'+k+'">'+esc(c.msgs?.[k]||DEFAULT_CFG.msgs[k])+'</textarea></label>').join("")+
     '<div class="two"><label class="f">Próxima visita: a partir de quantos dias?<input id="aPxDe" inputmode="numeric" value="'+esc(janDe())+'"></label><label class="f">Até quantos dias?<input id="aPxAte" inputmode="numeric" value="'+esc(janAte())+'"></label></div>'+
     '<label class="f">Serviços que NÃO chamam pra próxima (separe com |)<input id="aSemPx" value="'+esc(c.semProxima||"maquiagem|penteado|babyliss")+'"></label>'+
