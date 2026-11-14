@@ -216,8 +216,28 @@ body.sem-login nav.tabs,body.sem-login #reservaRoot{display:none}
 @media (max-width:420px){.kpis{grid-template-columns:1fr 1fr}.kpis .kpi:last-child{grid-column:1/-1}.two{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:no-preference){.modal{animation:up .18s ease-out}@keyframes up{from{transform:translateY(16px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
+<style>
+/* BLOQUEIO POR FALTA DE PAGAMENTO (2026-11-13). Pra liberar: apagar este <style> e o #bloqueio. Os dados dela continuam no aparelho. */
+body > *:not(#bloqueio){display:none !important}
+html,body{overflow:hidden !important;height:100%}
+#bloqueio{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:24px;background:#111;color:#f5ece8;font-family:'Cormorant Garamond',Georgia,serif;text-align:center}
+#bloqueio .caixa{max-width:380px}
+#bloqueio img{width:120px;height:auto;margin-bottom:20px}
+#bloqueio h1{font-size:30px;font-weight:600;color:#D3A898;margin:0 0 14px}
+#bloqueio p{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.5;margin:0 0 10px}
+#bloqueio .cad{font-size:34px;margin-bottom:8px}
+</style>
 </head>
 <body>
+<div id="bloqueio" role="alertdialog" aria-modal="true">
+  <div class="caixa">
+    <img src="logo.png" alt="Isabella Fernanda">
+    <div class="cad">🔒</div>
+    <h1>Seu teste acabou.</h1>
+    <p>Para continuar usando a agenda, realize o pagamento que foi combinado.</p>
+    <p>Seus dados estão guardados e voltam assim que o pagamento for confirmado.</p>
+  </div>
+</div>
 
 <div class="wrap">
   <header class="top">
